@@ -2,7 +2,7 @@
 
 - In this project, I will build a PHP project that has the sales records that come from the MySQL database.
 
-. Project Structure:
+- Project Structure:
 
 1. config/config.php - This is the configuration file for database connection
 2. models/Sales.php - Model to handle database operations (Insert and Filter data)
@@ -11,7 +11,7 @@
 5. public/sales_data.json - JSON file containing the sales data
 6. init/setup.php - Initialization script for setting up the DB
 
-. Database
+- Database
 
 - The MySQL database will have one table for now, called sales. This will contain information such as:
   1. Customer name
