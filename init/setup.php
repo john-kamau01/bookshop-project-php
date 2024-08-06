@@ -1,21 +1,25 @@
 <?php
-require "../config/config.php";
+require '../config/config.php';
 
-$config = require "../config/config.php";
+// Connect to MySQL
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-$conn = new mysqli($config["db_host"],$config["db_user"], $config["db_password"], $config["db_name"]);
-
-if($conn->connect_error){
+// Check connection
+if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Read and execute the schema.sql file
-$schema = file_get_contents(__DIR__ . "/schema.sql");
-
-if($conn->multi_query($schema)){
-    echo "Database schema created successfully!";
+// Load and execute schema
+$sql = file_get_contents('../init/schema.sql');
+if ($conn->multi_query($sql)) {
+    do {
+        if ($result = $conn->store_result()) {
+            $result->free();
+        }
+    } while ($conn->more_results() && $conn->next_result());
+    echo "Database setup complete!";
 } else {
-    echo "Error creating database schema: " . $conn->error;
+    echo "Error setting up database: " . $conn->error;
 }
 
 $conn->close();

@@ -1,7 +1,7 @@
 <?php
 
-require "./config/config.php";
-require "./controllers/SalesController.php";
+require "../config/config.php";
+require "../controllers/SalesController.php";
 
 $config = require "./config/config.php";
 
