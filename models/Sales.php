@@ -39,4 +39,44 @@ class Sales
         $checkStmt->close();
         $insertStmt->close();
     }
+
+    // Function to filter data
+    public function filterSales($customer, $product, $price)
+    {
+        $sql = "SELECT * FROM sales WHERE 1=1";
+        if ($customer) {
+            $sql .= " AND customer_name LIKE ?";
+        }
+        if ($product) {
+            $sql .= " AND product_name LIKE ?";
+        }
+        if ($price) {
+            $sql .= " AND product_price <= ?";
+        }
+
+        $stmt = $this->conn->prepare($sql);
+
+        if ($customer && $product && $price) {
+            $stmt->bind_param("ssi", "%$customer%", "%$product%", $price);
+        } elseif ($customer && $product) {
+            $stmt->bind_param("ss", "%$customer%", "%$product%");
+        } elseif ($customer && $price) {
+            $stmt->bind_param("si", "%$customer%", $price);
+        } elseif ($product && $price) {
+            $stmt->bind_param("si", "%$product%", $price);
+        } elseif ($customer) {
+            $stmt->bind_param("s", "%$customer%");
+        } elseif ($product) {
+            $stmt->bind_param("s", "%$product%");
+        } elseif ($price) {
+            $stmt->bind_param("i", $price);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $sales = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $sales;
+    }
 }
